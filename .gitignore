@@ -2,3 +2,4 @@ model-chks*
 datasets*
 data*
 *pyc
+logs*

@@ -43,12 +43,13 @@ def pgd_centroid_attack(net, img_batch, label_batch, centroid_tensor, mean_tenso
         # batch_size x 512
         pen_feats = net.module.penultimate(img_batch + perturb)
         # compute the distance
-        class_dists = torch.sum((pen_feats.unsqueeze(1) - centroid_tensor.unsqueeze(0))**2, 2)
-        class_dists.scatter_(1, label_batch.unsqueeze(1), 1e10)
-        min_targets, _ = torch.min(class_dists, 1)
-        # pdb.set_trace()
-        sum_loss = torch.sum(min_targets)
-        sum_loss.backward()
+        class_dists = torch.sqrt(torch.sum((pen_feats.unsqueeze(1) - centroid_tensor.unsqueeze(0))**2, 2))
+        # class_dists.scatter_(1, label_batch.unsqueeze(1), 1e10)
+        # min_targets, _ = torch.min(class_dists, 1)
+        # sum_loss = torch.sum(min_targets)
+        # sum_loss.backward()
+        loss = nn.CrossEntropyLoss()(class_dists, label_batch)
+        loss.backward()
         perturb.data -= pgd_lr * torch.sign(perturb.grad)
         # clip the range of perturbation
         perturb_01 = torch.clamp(perturb.data * std_tensor, -eps, eps)
@@ -59,6 +60,29 @@ def pgd_centroid_attack(net, img_batch, label_batch, centroid_tensor, mean_tenso
         perturb.grad[:] = 0
 
     return img_batch + perturb
+
+def pgd_attack(net, img_batch, label_batch, mean_tensor, std_tensor,
+                        pgd_lr, pgd_steps, eps):
+    perturb = torch.zeros_like(img_batch).uniform_(-eps / 0.203, eps / 0.203).to('cuda')
+    perturb.requires_grad_()
+    img_01 = img_batch * std_tensor + mean_tensor
+    ce_loss = nn.CrossEntropyLoss(reduction="sum")
+    for step in range(pgd_steps):
+        # batch_size x 512
+        logits = net(img_batch + perturb)
+        loss = ce_loss(logits, label_batch)
+        loss.backward()
+        perturb.data += pgd_lr * torch.sign(perturb.grad)
+        # clip the range of perturbation
+        perturb_01 = torch.clamp(perturb.data * std_tensor, -eps, eps)
+        perturbed_01 = torch.clamp(img_01 + perturb_01, 0, 1)
+        perturb.data = (perturbed_01 - img_01) / std_tensor
+
+        net.zero_grad()
+        perturb.grad[:] = 0
+
+    return img_batch + perturb
+
 
 if __name__ == "__main__":
 
@@ -85,10 +109,15 @@ if __name__ == "__main__":
     parser.add_argument("--pgd_steps", default=20, type=int)
 
     parser.add_argument("--gpu", default="0", type=str)
+    parser.add_argument("--pgd", default=False, action="store_true")
+    parser.add_argument("--seed", default=1234, type=int)
     args = parser.parse_args()
 
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # see issue #152
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
+
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
 
     print("Preparing data...")
     # may use data augmentation to boost the results later
@@ -136,7 +165,12 @@ if __name__ == "__main__":
     ce_loss = nn.CrossEntropyLoss(reduction="sum")
     for nb, (imgs, labels) in enumerate(cifar_testloader):
         imgs, labels = imgs.to('cuda'), labels.to('cuda')
-        adv_img = pgd_centroid_attack(target_net, imgs, labels, centroid_tensor, mean_tensor, std_tensor,
+        if args.pgd:
+            adv_img = pgd_attack(subs_net, imgs, labels, mean_tensor, std_tensor,
+                                          args.pgd_lr, args.pgd_steps, args.eps)
+            # pdb.set_trace()
+        else:
+            adv_img = pgd_centroid_attack(subs_net, imgs, labels, centroid_tensor, mean_tensor, std_tensor,
                             args.pgd_lr, args.pgd_steps, args.eps)
         # pdb.set_trace()
         with torch.no_grad():
@@ -154,7 +188,7 @@ if __name__ == "__main__":
             n_corr = torch.sum(pred.view(-1) == labels.view(-1))
             total_adv_corr += n_corr
         n_total += imgs.size(0)
-        if nb % 50 == 0 or nb == len(trainloader) - 1:
+        if nb % 10 == 0 or nb == len(cifar_testloader) - 1:
             print("{}, natural loss/accuracy: {}  {}, adv loss/accuracy: {} {}".format(
                 time.strftime("%Y-%m-%d %H:%M:%S"), total_clean_loss/n_total,
                 float(total_corr)/n_total, total_adv_loss/n_total, float(total_adv_corr)/n_total))
