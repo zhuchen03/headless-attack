@@ -14,8 +14,8 @@ nohup \
 }
 
 # runexp       subs_chk     subs_net      target_chk                                        target_net  cname                seed  gpu
-runexp     ckpt-%s-4800.t7  ResNet18      ckpt-%s-4800-dp0.000-droplayer0.000-seed1226.t7   ResNet18    centroids/init.pth  987123 0
-runexp     ckpt-%s-4800.t7  ResNet18      ckpt-%s-4800-dp0.000-droplayer0.000-seed1226.t7   ResNet18    centroids/init.pth  897565 1
-runexp     ckpt-%s-4800.t7  ResNet18      ckpt-%s-4800-dp0.000-droplayer0.000-seed1226.t7   ResNet18    centroids/init.pth  546532 2
-runexp     ckpt-%s-4800.t7  ResNet18      ckpt-%s-4800-dp0.000-droplayer0.000-seed1226.t7   ResNet18    centroids/init.pth  243580 3
+runexp     ckpt-%s-4800.t7  ResNet18      %s_cifar10_adv.t7   ResNet18    centroids/init.pth  987123 0
+#runexp     ckpt-%s-4800.t7  ResNet18      ckpt-%s-4800-dp0.000-droplayer0.000-seed1226.t7   ResNet18    centroids/init.pth  897565 1
+#runexp     ckpt-%s-4800.t7  ResNet18      ckpt-%s-4800-dp0.000-droplayer0.000-seed1226.t7   ResNet18    centroids/init.pth  546532 2
+#runexp     ckpt-%s-4800.t7  ResNet18      ckpt-%s-4800-dp0.000-droplayer0.000-seed1226.t7   ResNet18    centroids/init.pth  243580 3
 

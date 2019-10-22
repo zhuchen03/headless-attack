@@ -15,3 +15,4 @@ from models.preact_resnet import *
 from models.mobilenet import *
 from models.mobilenetv2 import *
 from models.swissnet import *
+from models.imagenet_resnet import *

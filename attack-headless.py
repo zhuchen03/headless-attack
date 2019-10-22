@@ -161,8 +161,8 @@ if __name__ == "__main__":
 
     target_net = load_pretrained_net(args.target_net, args.target_chk_name, model_chk_path=args.model_resume_path)
     target_net = target_net.to('cuda')
-    subs_net.eval()
     target_net.eval()
+    subs_net.eval()
 
     cudnn.benchmark = True
 
