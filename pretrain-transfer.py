@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     print("Preparing data...")
     # load the pre-trained models
-    net = eval(args.net)(pretrained=True)
+    net = eval(args.net)(pretrained=True, num_classes=10)
     net = nn.DataParallel(net).to('cuda')
     # may use data augmentation to boost the results later
     tfms = [
