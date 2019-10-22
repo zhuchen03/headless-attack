@@ -99,6 +99,8 @@ if __name__ == "__main__":
                 logits = net.module.fc(imgs)
             else:
                 logits = net(imgs)
+
+            # pdb.set_trace()
             pred = torch.argmax(logits, 1)
 
             clean_loss = ce_loss(logits, labels)
@@ -124,6 +126,7 @@ if __name__ == "__main__":
                 pred = torch.argmax(logits, 1)
 
                 clean_loss = ce_loss(logits, labels)
+                pdb.set_trace()
                 # clean_loss.backward()
                 # optimizer.step()
 
@@ -134,5 +137,5 @@ if __name__ == "__main__":
                 test_total += imgs.size(0)
                 if nb % 50 == 0 or nb == len(cifar_testloader) - 1:
                     print("{}, Epoch {}, iter {} Test natural loss/accuracy: {}  {}".format(
-                        time.strftime("%Y-%m-%d %H:%M:%S"), epoch, nb, test_total_clean_loss/n_total,
-                        float(test_total_corr)/n_total))
+                        time.strftime("%Y-%m-%d %H:%M:%S"), epoch, nb, test_total_clean_loss/test_total,
+                        float(test_total_corr)/test_total))
