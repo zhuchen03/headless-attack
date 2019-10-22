@@ -19,7 +19,7 @@ eps=${12}
 }
 
 # runexp       subs_chk     subs_net      target_chk                                        target_net  cname               seed   gpu  nvars   gaussstd    steps    lr     eps
-runexp     ckpt-%s-4800.t7  ResNet18      ckpt-%s-4800-dp0.000-droplayer0.000-seed1226.t7   ResNet18    centroids/init.pth  987123 0   4        0.0         40      0.05    1
+runexp     ckpt-%s-4800.t7  ResNet18      ckpt-%s-4800-dp0.000-droplayer0.000-seed1226.t7   ResNet18    centroids/init.pth  987123 1   4        0.0         40      0.05    1
 #runexp     ckpt-%s-4800.t7  ResNet18      ckpt-%s-4800-dp0.000-droplayer0.000-seed1226.t7   ResNet18    centroids/init.pth  987123 1   4        0.0         60      0.05
 #runexp     ckpt-%s-4800.t7  ResNet18      ckpt-%s-4800-dp0.000-droplayer0.000-seed1226.t7   ResNet18    centroids/init.pth  987123 2   4        0.0         80      0.05
 #runexp     ckpt-%s-4800.t7  ResNet18      ckpt-%s-4800-dp0.000-droplayer0.000-seed1226.t7   ResNet18    centroids/init.pth  987123 3   4        0.0         100      0.05
