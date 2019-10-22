@@ -156,9 +156,11 @@ if __name__ == "__main__":
     # load the pre-trained models
     subs_net = load_pretrained_net(args.subs_net, args.subs_chk_name, model_chk_path=args.model_resume_path)
     subs_net = subs_net.to('cuda')
+    subs_net.eval()
 
     target_net = load_pretrained_net(args.target_net, args.target_chk_name, model_chk_path=args.model_resume_path)
     target_net = target_net.to('cuda')
+    target_net.eval()
 
     cudnn.benchmark = True
 
@@ -198,7 +200,7 @@ if __name__ == "__main__":
             n_corr = torch.sum(pred.view(-1) == labels.view(-1))
             total_adv_corr += n_corr
         n_total += imgs.size(0)
-        if nb % 10 == 0 or nb == len(cifar_testloader) - 1:
+        if nb == len(cifar_testloader) - 1:
             print("{}, natural loss/accuracy: {}  {}, adv loss/accuracy: {} {}".format(
                 time.strftime("%Y-%m-%d %H:%M:%S"), total_clean_loss/n_total,
                 float(total_corr)/n_total, total_adv_loss/n_total, float(total_adv_corr)/n_total))
