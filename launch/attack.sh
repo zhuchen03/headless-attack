@@ -8,8 +8,8 @@ seed=${6}
 gpu=${7}
 
     nohup \
-    python attack.py --subs-chk-name ${subs_chk} --subs-net ${subs_net} --target-net ${target_net} --target-chk-name ${target_chk} --centroid-out-name ${cname}  --seed ${seed} --gpu ${gpu} \
-    > logs/subs${subs_net}-${subs_chk}-tgt${target_net}-${target_chk}-seed${seed}.log 2>&1 &
+    python attack.py --subs-chk-name ${subs_chk} --subs-net ${subs_net} --target-net ${target_net} --target-chk-name ${target_chk} --centroid-out-name ${cname}  --seed ${seed} --gpu ${gpu} --overwrite \
+    > logs/subs${subs_net}-${subs_chk}-tgt${target_net}-${target_chk}-seed${seed}-4800samples.log 2>&1 &
 
 }
 

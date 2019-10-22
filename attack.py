@@ -90,7 +90,7 @@ if __name__ == "__main__":
     parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
     parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
     parser.add_argument('--sidx', default=0, type=int, help='starting id of each class')
-    parser.add_argument('--eidx', default=2400, type=int, help='ending id of each class')
+    parser.add_argument('--eidx', default=4800, type=int, help='ending id of each class')
     parser.add_argument('--train-dp', type=float, default=0)
     parser.add_argument('--droplayer', type=float, default=0)
     parser.add_argument('--batchsize', type=int, default=256)
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     parser.add_argument("--centroid-out-name", default="centroids/init.pth", type=str)
 
     # parameters for the attack
-    parser.add_argument("--eps", default=0.03137254901960784, type=float)
+    parser.add_argument("--eps", default=8, type=float)
     parser.add_argument("--pgd_lr", default=0.05, type=float)
     parser.add_argument("--pgd_steps", default=20, type=int)
 
@@ -118,6 +118,8 @@ if __name__ == "__main__":
 
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
+
+    args.eps = args.eps / 255.
 
     print("Preparing data...")
     # may use data augmentation to boost the results later
