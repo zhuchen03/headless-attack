@@ -14,7 +14,7 @@ import torchvision.transforms as transforms
 from dataloader import SubsetOfList
 from utils import *
 
-def compute_or_load_centroids(dataloader, net, out_name="centroids/init.pth", overwrite=False):
+def compute_or_load_centroids(dataloader, net, n_variants=1, gauss_std=0, out_name="centroids/init.pth", overwrite=False):
     if os.path.exists(out_name) and (not overwrite):
         return torch.load(out_name)
 
@@ -22,12 +22,17 @@ def compute_or_load_centroids(dataloader, net, out_name="centroids/init.pth", ov
     centroid_dict = [0 for _ in range(10)]
     count_dict = [0 for _ in range(10)]
     with torch.no_grad():
-        for nb, (input, label) in enumerate(dataloader):
-            input, label = input.to('cuda'), label.to('cuda')
-            pen_feats = net.module.penultimate(input)
-            for feat, lab in zip(pen_feats, label):
-                centroid_dict[lab.item()] += feat
-                count_dict[lab.item()] += 1
+        for nv in range(n_variants):
+            for nb, (input, label) in enumerate(dataloader):
+                input, label = input.to('cuda'), label.to('cuda')
+                if gauss_std > 0:
+                    perturb = torch.zeros_like(input).normal_(0, gauss_std)
+                else:
+                    perturb = 0
+                pen_feats = net.module.penultimate(input + perturb)
+                for feat, lab in zip(pen_feats, label):
+                    centroid_dict[lab.item()] += feat
+                    count_dict[lab.item()] += 1
     for n in range(len(centroid_dict)):
         centroid_dict[n] /= count_dict[n]
 
@@ -105,12 +110,15 @@ if __name__ == "__main__":
 
     # parameters for the attack
     parser.add_argument("--eps", default=8, type=float)
-    parser.add_argument("--pgd_lr", default=0.05, type=float)
-    parser.add_argument("--pgd_steps", default=20, type=int)
+    parser.add_argument("--pgd-lr", default=0.05, type=float)
+    parser.add_argument("--pgd-steps", default=20, type=int)
 
     parser.add_argument("--gpu", default="0", type=str)
     parser.add_argument("--pgd", default=False, action="store_true")
     parser.add_argument("--seed", default=1234, type=int)
+
+    parser.add_argument("--n-variants", default=1, type=int)
+    parser.add_argument("--gauss-std", default=0, type=float)
     args = parser.parse_args()
 
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # see issue #152
@@ -124,8 +132,8 @@ if __name__ == "__main__":
     print("Preparing data...")
     # may use data augmentation to boost the results later
     transform_train = transforms.Compose([
-        # transforms.RandomCrop(32, padding=4),
-        # transforms.RandomHorizontalFlip(),
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
     ])
@@ -156,7 +164,7 @@ if __name__ == "__main__":
 
     criterion = nn.CrossEntropyLoss()
 
-    centroids = compute_or_load_centroids(trainloader, subs_net, out_name=args.centroid_out_name, overwrite=args.overwrite)
+    centroids = compute_or_load_centroids(trainloader, subs_net, n_variants=args.n_variants, gauss_std=args.gauss_std, out_name=args.centroid_out_name, overwrite=args.overwrite)
 
     # attack with the centroids, and test the results on clean
     total_corr = 0
