@@ -54,14 +54,19 @@ if __name__ == "__main__":
 
     trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform_train)
     if args.extract_features:
-        feat_list = []
-        trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batchsize, shuffle=False, num_workers=2)
-        net.eval()
-        with torch.no_grad():
-            for img, label in trainloader:
-                img, label = img.to('cuda'), label.to('cuda')
-                feats = net.module.penultimate(img)
-                feat_list += [(feat.cpu(), lab.item()) for feat, lab in zip(feats, label)]
+        fname = "CIFAR10-{}-faetures.pth".format(args.net)
+        if not os.path.exists(fname):
+            feat_list = []
+            trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batchsize, shuffle=False, num_workers=2)
+            net.eval()
+            with torch.no_grad():
+                for img, label in trainloader:
+                    img, label = img.to('cuda'), label.to('cuda')
+                    feats = net.module.penultimate(img)
+                    feat_list += [(feat.cpu(), lab.item()) for feat, lab in zip(feats, label)]
+            torch.save(feat_list, "CIFAR10-{}-faetures.pth".format(args.net))
+        else:
+            feat_list = torch.load(fname)
         # feat_tensor = torch.stack(feat_list)
         trainloader = torch.utils.data.DataLoader(feat_list, batch_size=args.batchsize, shuffle=True, num_workers=2)
     else:
@@ -90,14 +95,15 @@ if __name__ == "__main__":
         if epoch in [50, 75]:
             for param_group in optimizer.param_groups:
                 param_group['lr'] *= 0.1
-        net.train()
         for nb, (imgs, labels) in enumerate(trainloader):
             optimizer.zero_grad()
             imgs, labels = imgs.to('cuda'), labels.to('cuda')
             # pdb.set_trace()
             if args.extract_features:
                 logits = net.module.fc(imgs)
+                net.eval()
             else:
+                net.train()
                 logits = net(imgs)
 
             # pdb.set_trace()
@@ -116,6 +122,7 @@ if __name__ == "__main__":
                 print("{}, Epoch {}, iter {} Train natural loss/accuracy: {}  {}".format(
                     time.strftime("%Y-%m-%d %H:%M:%S"), epoch, nb, total_clean_loss/n_total,
                     float(total_corr)/n_total))
+        print("\n")
 
         with torch.no_grad():
             net.eval()
@@ -126,7 +133,6 @@ if __name__ == "__main__":
                 pred = torch.argmax(logits, 1)
 
                 clean_loss = ce_loss(logits, labels)
-                pdb.set_trace()
                 # clean_loss.backward()
                 # optimizer.step()
 
@@ -136,6 +142,8 @@ if __name__ == "__main__":
 
                 test_total += imgs.size(0)
                 if nb % 50 == 0 or nb == len(cifar_testloader) - 1:
-                    print("{}, Epoch {}, iter {} Test natural loss/accuracy: {}  {}".format(
+                    print("* {}, Epoch {}, iter {} Test natural loss/accuracy: {}  {}".format(
                         time.strftime("%Y-%m-%d %H:%M:%S"), epoch, nb, test_total_clean_loss/test_total,
                         float(test_total_corr)/test_total))
+            print("\n")
+        torch.save({'net': net.state_dict(), "test_acc": float(test_total_corr)/test_total}, "chks/{}-lr{}-last.pth".format(args.net, args.lr))

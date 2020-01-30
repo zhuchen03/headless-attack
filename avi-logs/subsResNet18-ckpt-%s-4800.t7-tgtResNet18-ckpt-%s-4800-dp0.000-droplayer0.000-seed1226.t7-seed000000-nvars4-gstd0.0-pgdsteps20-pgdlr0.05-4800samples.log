@@ -1,0 +1,6 @@
+Preparing data...
+Files already downloaded and verified
+==> Resuming from checkpoint for ResNet18..
+==> Resuming from checkpoint for ResNet18..
+2019-10-22 04:51:31, natural loss/accuracy: 0.20601194763183595  0.951, adv loss/accuracy: 4.94611572265625 0.095
+2019-10-22 04:52:27, natural loss/accuracy: 0.19580788116455078  0.9509, adv loss/accuracy: 4.965029296875 0.1065

@@ -135,18 +135,18 @@ if __name__ == "__main__":
         transforms.RandomCrop(32, padding=4),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
-        # transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
     ])
 
     transform_test = transforms.Compose([
         transforms.ToTensor(),
-        # transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
     ])
 
-    # mean_tensor = torch.Tensor([0.4914, 0.4822, 0.4465]).view(1,3,1,1).to('cuda')
-    # std_tensor = torch.Tensor([0.2023, 0.1994, 0.2010]).view(1,3,1,1).to('cuda')
-    mean_tensor = torch.Tensor([0,0,0]).view(1, 3, 1, 1).to('cuda')
-    std_tensor = torch.Tensor([1,1,1]).view(1, 3, 1, 1).to('cuda')
+    mean_tensor = torch.Tensor([0.4914, 0.4822, 0.4465]).view(1,3,1,1).to('cuda')
+    std_tensor = torch.Tensor([0.2023, 0.1994, 0.2010]).view(1,3,1,1).to('cuda')
+    # mean_tensor = torch.Tensor([0,0,0]).view(1, 3, 1, 1).to('cuda')
+    # std_tensor = torch.Tensor([1,1,1]).view(1, 3, 1, 1).to('cuda')
 
     train_list = torch.load('./datasets/CIFAR10_TRAIN_Split.pth')['clean_train']
     trainset = SubsetOfList(train_list, transform=transform_train, start_idx=args.sidx, end_idx=args.eidx)

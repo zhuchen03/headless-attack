@@ -1,0 +1,66 @@
+nohup: ignoring input
+2
+Preparing data...
+Files already downloaded and verified
+==> Resuming from checkpoint for ResNet18..
+==> Resuming from checkpoint for ResNet18..
+2019-10-22 05:12:46, natural loss/accuracy: 0.20601194763183595  0.951, adv loss/accuracy: 1.5466893310546874 0.659
+2019-10-22 05:13:38, natural loss/accuracy: 0.19580788116455078  0.9509, adv loss/accuracy: 1.4294922607421876 0.6697
+Preparing data...
+Files already downloaded and verified
+==> Resuming from checkpoint for ResNet18..
+==> Resuming from checkpoint for ResNet18..
+2019-10-22 05:14:18, natural loss/accuracy: 0.20601194763183595  0.951, adv loss/accuracy: 1.6715538330078126 0.65
+2019-10-22 05:15:11, natural loss/accuracy: 0.19580788116455078  0.9509, adv loss/accuracy: 1.5432677978515625 0.6736
+2
+Preparing data...
+Files already downloaded and verified
+==> Resuming from checkpoint for ResNet18..
+==> Resuming from checkpoint for ResNet18..
+2019-10-22 05:15:51, natural loss/accuracy: 0.20601194763183595  0.951, adv loss/accuracy: 1.55746630859375 0.649
+2019-10-22 05:16:44, natural loss/accuracy: 0.19580788116455078  0.9509, adv loss/accuracy: 1.4471484130859376 0.6688
+Preparing data...
+Files already downloaded and verified
+==> Resuming from checkpoint for ResNet18..
+==> Resuming from checkpoint for ResNet18..
+2019-10-22 05:17:24, natural loss/accuracy: 0.20601194763183595  0.951, adv loss/accuracy: 1.655286865234375 0.656
+2019-10-22 05:18:17, natural loss/accuracy: 0.19580788116455078  0.9509, adv loss/accuracy: 1.5308175170898437 0.6747
+2
+Preparing data...
+Files already downloaded and verified
+==> Resuming from checkpoint for ResNet18..
+==> Resuming from checkpoint for ResNet18..
+2019-10-22 05:18:58, natural loss/accuracy: 0.20601194763183595  0.951, adv loss/accuracy: 1.534018798828125 0.662
+2019-10-22 05:19:51, natural loss/accuracy: 0.19580788116455078  0.9509, adv loss/accuracy: 1.4422173217773437 0.6675
+Preparing data...
+Files already downloaded and verified
+==> Resuming from checkpoint for ResNet18..
+==> Resuming from checkpoint for ResNet18..
+2019-10-22 05:20:32, natural loss/accuracy: 0.20601194763183595  0.951, adv loss/accuracy: 1.618330322265625 0.668
+2019-10-22 05:21:25, natural loss/accuracy: 0.19580788116455078  0.9509, adv loss/accuracy: 1.5326902221679688 0.6759
+2
+Preparing data...
+Files already downloaded and verified
+==> Resuming from checkpoint for ResNet18..
+==> Resuming from checkpoint for ResNet18..
+2019-10-22 05:22:05, natural loss/accuracy: 0.20601194763183595  0.951, adv loss/accuracy: 1.5513529052734376 0.649
+2019-10-22 05:22:58, natural loss/accuracy: 0.19580788116455078  0.9509, adv loss/accuracy: 1.4267250244140626 0.6694
+Preparing data...
+Files already downloaded and verified
+==> Resuming from checkpoint for ResNet18..
+==> Resuming from checkpoint for ResNet18..
+2019-10-22 05:23:38, natural loss/accuracy: 0.20601194763183595  0.951, adv loss/accuracy: 1.6677080078125 0.652
+2019-10-22 05:24:31, natural loss/accuracy: 0.19580788116455078  0.9509, adv loss/accuracy: 1.5446319091796874 0.6735
+2
+Preparing data...
+Files already downloaded and verified
+==> Resuming from checkpoint for ResNet18..
+==> Resuming from checkpoint for ResNet18..
+2019-10-22 05:25:11, natural loss/accuracy: 0.20601194763183595  0.951, adv loss/accuracy: 1.511233154296875 0.659
+2019-10-22 05:26:04, natural loss/accuracy: 0.19580788116455078  0.9509, adv loss/accuracy: 1.4288884887695312 0.6683
+Preparing data...
+Files already downloaded and verified
+==> Resuming from checkpoint for ResNet18..
+==> Resuming from checkpoint for ResNet18..
+2019-10-22 05:26:44, natural loss/accuracy: 0.20601194763183595  0.951, adv loss/accuracy: 1.637373779296875 0.654
+2019-10-22 05:27:37, natural loss/accuracy: 0.19580788116455078  0.9509, adv loss/accuracy: 1.5329260986328126 0.6729
